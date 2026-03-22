@@ -7,12 +7,17 @@ This document outlines the development roadmap for an autonomous, GPS-denied dro
 The software stack is divided to match the target hardware's dual-processor design, ensuring a seamless transition from Mac simulation to the UNO Q.
 
 * **High-Level Brain (Target: UNO Q MPU - Debian Linux):**
+    * **Deployment:** Executed as an OCI container (via Podman) to ensure environment consistency from macOS development straight to the physical eMMC storage on the MPU.
     * **Autonomy Engine:** Python-based LangChain ReAct loop orchestrating mission objectives.
     * **Vision Pipeline:** OpenCV edge tracing and lightweight inferencing (e.g., YOLOv8-nano or TensorFlow Lite) tuned for the Qualcomm Adreno GPU.
     * **Comms:** `pymavlink` or MAVSDK to bridge high-level decisions to flight commands.
 * **Low-Level Flight (Target: ArduPilot / UNO Q MCU):**
+    * **Deployment:** Compiled as a monolithic bare-metal firmware image (`.apj`/`.bin`) running on the ChibiOS RTOS. No containerization is used, as this is deployed directly to the STM32 microcontroller.
     * **Flight Controller:** Handles PID loops, motor mixing, and immediate obstacle avoidance.
     * **Sensors:** Optical flow and LiDAR (for GPS-denied velocity/altitude hold), processed locally.
+
+* **Development / macOS SITL Environment:**
+    * **Simulation Container:** Software-In-The-Loop (SITL) and the ArduCopter build environment can optionally be containerized (Ubuntu-based) on the macOS host to maintain a clean, isolated workflow mimicking the firmware's target Linux CI environments.
 
 ## 2. Phase 1: Simulation Customization (The "Superset" Model)
 
