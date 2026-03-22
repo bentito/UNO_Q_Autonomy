@@ -50,3 +50,13 @@ test-flight: clean-sim
 		echo "Press Ctrl-C when you are ready to exit and clean up the simulator."; \
 		while true; do sleep 1; done \
 	'
+
+build-agent:
+	@echo "Building UNO Q Autonomy Agent Container using Podman..."
+	@cd $(ARDUPILOT_ROOT)/UNO_Q_Autonomy && podman build -t uno-q-agent -f Dockerfile .
+
+run-agent:
+	@echo "Running UNO Q Autonomy Agent with macOS GPU paravirtualization (simulating Adreno performance)..."
+	@podman run -it --rm --replace --device /dev/dri -v uno_q_ollama_models:/root/.ollama --name uno-q-agent-run uno-q-agent
+
+test: build-agent run-agent

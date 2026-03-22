@@ -46,3 +46,29 @@ cd UNO_Q_Autonomy
 make test-flight
 ```
 This automatically boots Webots in the background, spins up the `arducopter` SITL flight controller cleanly without an interactive MAVProxy console, and then executes our `test_flight.py` High-Level Brain algorithm. Hit `Ctrl-C` at any time to execute the cleanup trap and terminate the background simulator processes.
+
+### 5. Running the Agent Container (Podman)
+
+The High-Level Brain (LangChain + Vision) can run inside a Debian container to simulate the physical eMMC storage and OS of the Qualcomm Dragonwing MPU on the UNO Q.
+
+> **Note on macOS GPU Paravirtualization:** We require `--device /dev/dri` to ensure the simulated LLM operations run with Metal GPU acceleration (using Vulkan/virtio-gpu translation) rather than flat CPU. This yields roughly 70-80% of native Metal performance, perfectly simulating the Qualcomm Adreno compute limits.
+>
+> **Enabling `/dev/dri` on macOS:** Standard Apple Hypervisor VMs do not expose the GPU. You MUST recreate your Podman machine using the `libkrun` provider (requires Podman 5.2+). The command line flag was replaced by an environment variable in Podman 5.x, and it requires the `krunkit` package from a specific Homebrew tap:
+> ```bash
+> brew tap slp/krun       # Add the required repository
+> brew install krunkit    # Required for the virtio-gpu macOS translation backend
+> 
+> export CONTAINERS_MACHINE_PROVIDER=libkrun  # Tell podman to use libkrun for all following commands
+> 
+> podman machine rm       # Warning: this deletes your existing podman images/containers!
+> podman machine init --disk-size 50
+> podman machine start
+> ```
+
+Use the `Makefile` to build and test the agent:
+
+```bash
+cd UNO_Q_Autonomy
+make build-agent
+make run-agent
+```

@@ -1,0 +1,8 @@
+langchain
+langchain-openai
+langgraph
+huggingface-hub[cli]
+pymavlink
+opencv-python-headless
+numpy
+requests
