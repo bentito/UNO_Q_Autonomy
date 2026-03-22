@@ -26,6 +26,7 @@ Before writing autonomy code, the macOS simulation must accurately restrict itse
 * **[ ] Video Feed Extraction:** Write a Python script to pull the raw FPV camera array directly from the Webots API (bypassing MAVProxy) to act as the "local camera" feed.
 * **[ ] Model Latency (MPU constraint):** Introduce a strict `time.sleep()` or async delay loop in the Mac's vision pipeline to cap frame processing at 15-30 FPS, simulating the Dragonwing processor's throughput.
 * **[ ] Model Bandwidth (Telemetry constraint):** Cap the MAVLink message rate between the Python control script and ArduPilot to simulate the internal serial/RPC limits between the UNO Q's MPU and MCU.
+* **[ ] GPU Constraint Ratio (Metal vs. Adreno):** Quantify the rendering and LLM compute capabilities of the Qualcomm Adreno GPU versus the paravirtualized macOS Apple Silicon Metal pipeline (via Podman virtio-gpu) to find an accurate ratio factor for our simulation latency.
 
 ## 3. Phase 2: Vision & State Estimation (GPS-Denied)
 
