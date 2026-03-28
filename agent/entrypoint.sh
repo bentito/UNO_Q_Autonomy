@@ -20,9 +20,9 @@ echo "Starting llama.cpp server in the background..."
     --jinja &
 LLAMA_PID=$!
 
-echo "Waiting for llama-server to be reachable..."
-while ! curl -s http://localhost:11434/v1/models > /dev/null; do
-    sleep 1
+echo "Waiting for llama-server to be ready..."
+while ! curl -s http://localhost:11434/health | grep -q '"status":"ok"'; do
+    sleep 2
 done
 
 echo "llama-server is up. Starting the LangChain ReAct loop..."
