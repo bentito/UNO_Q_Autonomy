@@ -40,13 +40,11 @@ Since GPS is unavailable, the drone must rely on visual odometry and edge detect
 
 Implement the LangChain framework to convert natural language objectives ("find a dog, give treat, return on low battery") into executable drone behaviors.
 
-* **[ ] Tool Creation:** Define strict Python functions for the LLM to call:
-    * `initiate_grid_search(area_bounds)`
-    * `scan_for_target(target_class="dog")`
-    * `trigger_payload(payload="treat_dispenser")`
-    * `get_battery_state()`
-    * `execute_return_to_home()`
-* **[ ] The Decision Loop:** Implement a LangChain Agent (using a lightweight local LLM or an API via WiFi) that continuously evaluates the camera state and battery state against the primary objective.
+* **[x] Tool Creation:** Define strict Python functions for the LLM to call:
+    * `plot_navigation(target_x, target_y)` (dynamic coordinate movement)
+    * `analyze_image(camera_id)` (vision target evaluation)
+    * `get_telemetry()` (altitude and heading state)
+* **[x] The Decision Loop:** Implement a LangChain Agent (using a lightweight local LLM or an API via WiFi) that continuously evaluates the camera state and battery state against the primary objective.
 * **[ ] Failsafe Interruption:** Build a hardware-interrupt simulation where if battery drops below 15%, the LangChain loop is overridden, and `execute_return_to_home()` is forced.
 
 ## 5. Phase 4: Hardware Porting (Arduino UNO Q 4GB)
