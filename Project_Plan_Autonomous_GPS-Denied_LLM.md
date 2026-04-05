@@ -26,6 +26,7 @@ Before writing autonomy code, the macOS simulation must accurately restrict itse
 * **[ ] Video Feed Extraction:** Write a Python script to pull the raw FPV camera array directly from the Webots API (bypassing MAVProxy) to act as the "local camera" feed.
 * **[ ] Model Latency (MPU constraint):** Introduce a strict `time.sleep()` or async delay loop in the Mac's vision pipeline to cap frame processing at 15-30 FPS, simulating the Dragonwing processor's throughput.
 * **[ ] Model Bandwidth (Telemetry constraint):** Cap the MAVLink message rate between the Python control script and ArduPilot to simulate the internal serial/RPC limits between the UNO Q's MPU and MCU.
+* **[ ] GPU Constraint Ratio (Metal vs. Adreno):** Quantify the rendering and LLM compute capabilities of the Qualcomm Adreno GPU versus the paravirtualized macOS Apple Silicon Metal pipeline (via Podman virtio-gpu) to find an accurate ratio factor for our simulation latency.
 
 ## 3. Phase 2: Vision & State Estimation (GPS-Denied)
 
@@ -39,13 +40,11 @@ Since GPS is unavailable, the drone must rely on visual odometry and edge detect
 
 Implement the LangChain framework to convert natural language objectives ("find a dog, give treat, return on low battery") into executable drone behaviors.
 
-* **[ ] Tool Creation:** Define strict Python functions for the LLM to call:
-    * `initiate_grid_search(area_bounds)`
-    * `scan_for_target(target_class="dog")`
-    * `trigger_payload(payload="treat_dispenser")`
-    * `get_battery_state()`
-    * `execute_return_to_home()`
-* **[ ] The Decision Loop:** Implement a LangChain Agent (using a lightweight local LLM or an API via WiFi) that continuously evaluates the camera state and battery state against the primary objective.
+* **[x] Tool Creation:** Define strict Python functions for the LLM to call:
+    * `plot_navigation(target_x, target_y)` (dynamic coordinate movement)
+    * `analyze_image(camera_id)` (vision target evaluation)
+    * `get_telemetry()` (altitude and heading state)
+* **[x] The Decision Loop:** Implement a LangChain Agent (using a lightweight local LLM or an API via WiFi) that continuously evaluates the camera state and battery state against the primary objective.
 * **[ ] Failsafe Interruption:** Build a hardware-interrupt simulation where if battery drops below 15%, the LangChain loop is overridden, and `execute_return_to_home()` is forced.
 
 ## 5. Phase 4: Hardware Porting (Arduino UNO Q 4GB)
